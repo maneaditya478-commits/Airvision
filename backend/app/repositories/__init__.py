@@ -1,0 +1,7 @@
+from app.repositories.user import user_repository
+from app.repositories.air_quality import air_quality_data_repository, air_quality_station_repository
+from app.repositories.satellite import satellite_data_repository
+from app.repositories.weather import weather_data_repository
+from app.repositories.fire import fire_data_repository
+from app.repositories.hcho import hcho_hotspot_repository
+from app.repositories.prediction import prediction_repository
