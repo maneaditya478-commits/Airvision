@@ -1,5 +1,6 @@
 from functools import lru_cache
-
+from typing import Any
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,6 +31,29 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+
+    @model_validator(mode="before")
+    @classmethod
+    def assemble_db_urls(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            # Check database_url (async engine)
+            db_url = data.get("database_url")
+            if db_url and isinstance(db_url, str):
+                if db_url.startswith("postgresql://"):
+                    data["database_url"] = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+                
+                # Derive database_url_sync if it's not set or starts with asyncpg
+                db_sync = data.get("database_url_sync")
+                if not db_sync or not isinstance(db_sync, str) or db_sync.startswith("postgresql+asyncpg://"):
+                    ref_url = db_sync if db_sync else db_url
+                    data["database_url_sync"] = ref_url.replace("postgresql+asyncpg://", "postgresql://", 1)
+
+            # Check database_url_sync (sync engine)
+            db_sync = data.get("database_url_sync")
+            if db_sync and isinstance(db_sync, str) and db_sync.startswith("postgresql+asyncpg://"):
+                data["database_url_sync"] = db_sync.replace("postgresql+asyncpg://", "postgresql://", 1)
+
+        return data
 
 
 @lru_cache
