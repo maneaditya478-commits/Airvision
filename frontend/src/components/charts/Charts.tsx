@@ -37,7 +37,7 @@ export function AQICategoryChart({ data }: { data: Record<string, number> }) {
   );
 }
 
-export function AQITrendChart({ data }: { data: Array<{ date: string; avg_aqi: number; avg_pm25: number }> }) {
+export function AQITrendChart({ data }: { data: Array<{ date: string; averageAQI: number; averagePM25: number }> }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
@@ -46,8 +46,8 @@ export function AQITrendChart({ data }: { data: Array<{ date: string; avg_aqi: n
         <YAxis stroke="#94a3b8" />
         <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155" }} />
         <Legend />
-        <Line type="monotone" dataKey="avg_aqi" stroke="#0ea5e9" strokeWidth={2} name="Avg AQI" />
-        <Line type="monotone" dataKey="avg_pm25" stroke="#f97316" strokeWidth={2} name="Avg PM2.5" />
+        <Line type="monotone" dataKey="averageAQI" stroke="#0ea5e9" strokeWidth={2} name="Avg AQI" />
+        <Line type="monotone" dataKey="averagePM25" stroke="#f97316" strokeWidth={2} name="Avg PM2.5" />
       </LineChart>
     </ResponsiveContainer>
   );

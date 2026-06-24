@@ -36,18 +36,36 @@ export const api = {
 
   getMe: () => request<{ id: number; email: string; full_name: string; role: string }>("/api/v1/auth/me"),
 
-  getDashboardSummary: () => request<{
-    total_stations: number;
-    avg_aqi: number;
-    category_distribution: Record<string, number>;
-    worst_city: string | null;
-    best_city: string | null;
-    last_updated: string | null;
-  }>("/api/v1/dashboard/summary"),
+  getDashboardSummary: async () => {
+    const data = await request<{
+      total_stations: number;
+      avg_aqi: number;
+      category_distribution: Record<string, number>;
+      worst_city: string | null;
+      best_city: string | null;
+      last_updated: string | null;
+    }>("/api/v1/dashboard/summary");
+    return {
+      stationCount: data.total_stations,
+      averageAQI: data.avg_aqi,
+      categoryDistribution: data.category_distribution,
+      worstCity: data.worst_city,
+      bestCity: data.best_city,
+      lastUpdated: data.last_updated,
+    };
+  },
 
-  getAQITrends: (days = 30) => request<Array<{ date: string; avg_aqi: number; avg_pm25: number; station_count: number }>>(
-    `/api/v1/dashboard/trends?days=${days}`
-  ),
+  getAQITrends: async (days = 30) => {
+    const data = await request<Array<{ date: string; avg_aqi: number; avg_pm25: number; station_count: number }>>(
+      `/api/v1/dashboard/trends?days=${days}`
+    );
+    return data.map((d) => ({
+      date: d.date,
+      averageAQI: d.avg_aqi,
+      averagePM25: d.avg_pm25,
+      stationCount: d.station_count,
+    }));
+  },
 
   getAQIMap: () => request<Array<{ latitude: number; longitude: number; value: number; category: string | null; label: string | null }>>(
     "/api/v1/dashboard/map"

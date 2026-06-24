@@ -25,12 +25,12 @@ export default function ForecastingPage() {
       try {
         const data = await api.getAQITrends(20);
         // Create 7-day future forecast predictions
-        const lastPoint = data[data.length - 1] || { date: new Date().toISOString().split("T")[0], avg_aqi: 120, avg_pm25: 80 };
+        const lastPoint = data[data.length - 1] || { date: new Date().toISOString().split("T")[0], averageAQI: 120, averagePM25: 80 };
         const forecast = [];
         
         // Base trend logic
-        let currentAqi = lastPoint.avg_aqi;
-        let currentPm25 = lastPoint.avg_pm25;
+        let currentAqi = lastPoint.averageAQI;
+        let currentPm25 = lastPoint.averagePM25;
 
         for (let i = 1; i <= 7; i++) {
           const date = new Date(lastPoint.date);
@@ -43,8 +43,8 @@ export default function ForecastingPage() {
 
           forecast.push({
             date: dateStr,
-            forecast_aqi: Math.round(currentAqi),
-            forecast_pm25: Math.round(currentPm25),
+            forecastAQI: Math.round(currentAqi),
+            forecastPM25: Math.round(currentPm25),
           });
         }
 
@@ -52,13 +52,13 @@ export default function ForecastingPage() {
         const combined = [
           ...data.map((d) => ({
             date: d.date,
-            avg_aqi: d.avg_aqi,
-            avg_pm25: d.avg_pm25,
+            averageAQI: d.averageAQI,
+            averagePM25: d.averagePM25,
           })),
           ...forecast.map((f) => ({
             date: f.date,
-            forecast_aqi: f.forecast_aqi,
-            forecast_pm25: f.forecast_pm25,
+            forecastAQI: f.forecastAQI,
+            forecastPM25: f.forecastPM25,
           })),
         ];
 
@@ -73,7 +73,7 @@ export default function ForecastingPage() {
     loadTrends();
   }, []);
 
-  const latestForecast = trends.filter((t) => t.forecast_aqi).slice(-1)[0] || { forecast_aqi: 145, forecast_pm25: 98 };
+  const latestForecast = trends.filter((t) => t.forecastAQI).slice(-1)[0] || { forecastAQI: 145, forecastPM25: 98 };
 
   return (
     <AppLayout>
@@ -84,8 +84,8 @@ export default function ForecastingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <StatCard title="7-Day Forecasted AQI" value={latestForecast.forecast_aqi} subtitle="Forecasted next week average" color="#38bdf8" />
-          <StatCard title="7-Day Forecasted PM2.5" value={`${latestForecast.forecast_pm25} µg/m³`} subtitle="Forecasted next week average" color="#fb923c" />
+          <StatCard title="7-Day Forecasted AQI" value={latestForecast.forecastAQI} subtitle="Forecasted next week average" color="#38bdf8" />
+          <StatCard title="7-Day Forecasted PM2.5" value={`${latestForecast.forecastPM25} µg/m³`} subtitle="Forecasted next week average" color="#fb923c" />
         </div>
 
         <Card>
@@ -105,11 +105,11 @@ export default function ForecastingPage() {
                   <Tooltip contentStyle={{ background: "#1e293b", border: "1px solid #334155" }} />
                   <Legend />
                   {/* Historical Lines */}
-                  <Line type="monotone" dataKey="avg_aqi" stroke="#0ea5e9" strokeWidth={2.5} name="Historical AQI" dot={false} />
-                  <Line type="monotone" dataKey="avg_pm25" stroke="#f97316" strokeWidth={2} name="Historical PM2.5" dot={false} />
+                  <Line type="monotone" dataKey="averageAQI" stroke="#0ea5e9" strokeWidth={2.5} name="Historical AQI" dot={false} />
+                  <Line type="monotone" dataKey="averagePM25" stroke="#f97316" strokeWidth={2} name="Historical PM2.5" dot={false} />
                   {/* Forecasted Lines */}
-                  <Line type="monotone" dataKey="forecast_aqi" stroke="#38bdf8" strokeWidth={2.5} strokeDasharray="5 5" name="Forecasted AQI" dot={false} />
-                  <Line type="monotone" dataKey="forecast_pm25" stroke="#fb923c" strokeWidth={2} strokeDasharray="5 5" name="Forecasted PM2.5" dot={false} />
+                  <Line type="monotone" dataKey="forecastAQI" stroke="#38bdf8" strokeWidth={2.5} strokeDasharray="5 5" name="Forecasted AQI" dot={false} />
+                  <Line type="monotone" dataKey="forecastPM25" stroke="#fb923c" strokeWidth={2} strokeDasharray="5 5" name="Forecasted PM2.5" dot={false} />
                 </ComposedChart>
               </ResponsiveContainer>
             )}

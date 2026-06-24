@@ -31,9 +31,9 @@ export default function DashboardPage() {
     );
   }
 
-  const avgCategory = summary && summary.avg_aqi <= 50 ? "Good"
-    : summary && summary.avg_aqi <= 100 ? "Satisfactory"
-    : summary && summary.avg_aqi <= 200 ? "Moderate" : "Poor";
+  const avgCategory = summary && summary.averageAQI <= 50 ? "Good"
+    : summary && summary.averageAQI <= 100 ? "Satisfactory"
+    : summary && summary.averageAQI <= 200 ? "Moderate" : "Poor";
 
   return (
     <AppLayout>
@@ -44,17 +44,17 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard title="Average AQI" value={summary?.avg_aqi ?? 0} color={getAQIColor(avgCategory)} subtitle={avgCategory} />
-          <StatCard title="Monitoring Stations" value={summary?.total_stations ?? 0} subtitle="CPCB ground stations" />
-          <StatCard title="Worst City" value={summary?.worst_city ?? "N/A"} subtitle="Highest average AQI" color="#ef4444" />
-          <StatCard title="Best City" value={summary?.best_city ?? "N/A"} subtitle="Lowest average AQI" color="#22c55e" />
+          <StatCard title="Average AQI" value={summary?.averageAQI ?? 0} color={getAQIColor(avgCategory)} subtitle={avgCategory} />
+          <StatCard title="Monitoring Stations" value={summary?.stationCount ?? 0} subtitle="CPCB ground stations" />
+          <StatCard title="Worst City" value={summary?.worstCity ?? "N/A"} subtitle="Highest average AQI" color="#ef4444" />
+          <StatCard title="Best City" value={summary?.bestCity ?? "N/A"} subtitle="Lowest average AQI" color="#22c55e" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader><CardTitle>AQI Category Distribution</CardTitle></CardHeader>
             <CardContent>
-              {summary && <AQICategoryChart data={summary.category_distribution} />}
+              {summary && <AQICategoryChart data={summary.categoryDistribution} />}
             </CardContent>
           </Card>
           <Card>
