@@ -56,6 +56,7 @@ app.include_router(crud_router, prefix="/api")
 
 
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
+@app.get("/healthz", response_model=HealthResponse, tags=["Health"])
 async def health_check():
     db_status = "connected"
     redis_status = "connected"
